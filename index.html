@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2f5f2b">
+<title>Encuesta PBS</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{--verde:#2f5f2b;--verde2:#3f7d3a;--claro:#e6efe3;--arena:#f6f1e6;--tinta:#1d2a1b;--gris:#6b7468;--borde:#cfd8cb;--rojo:#b3261e;--oro:#b58a12}
+*{box-sizing:border-box}
+body{margin:0;font:17px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--arena);color:var(--tinta)}
+header{background:var(--verde);color:#fff;padding:14px 16px calc(14px) ;position:sticky;top:0;z-index:5}
+header h1{font-size:17px;margin:0;font-weight:700}
+header .sub{font-size:13px;opacity:.85}
+.estado{display:inline-block;font-size:12px;padding:2px 8px;border-radius:99px;background:#ffffff26;margin-top:4px}
+.estado.off{background:#b3261e}
+main{max-width:680px;margin:0 auto;padding:16px 16px 120px}
+.card{background:#fff;border:1px solid var(--borde);border-radius:12px;padding:16px;margin-bottom:14px}
+h2{font-size:19px;margin:0 0 4px;color:var(--verde)}
+.desc{color:var(--gris);font-size:14px;margin:0 0 6px;white-space:pre-line}
+.q{margin:18px 0 6px;font-weight:600}
+.q .id{color:var(--verde2);margin-right:4px}
+.req{color:var(--rojo)}
+.help{font-size:13px;color:var(--gris);margin:-2px 0 8px;white-space:pre-line}
+.opt{display:flex;align-items:center;gap:10px;padding:11px 12px;border:1.5px solid var(--borde);border-radius:10px;margin:6px 0;background:#fff;cursor:pointer;user-select:none}
+.opt input{width:22px;height:22px;accent-color:var(--verde2);flex:none;margin:0}
+.opt.sel{border-color:var(--verde2);background:var(--claro)}
+input[type=text],input[type=number],input[type=date],input[type=url],select,textarea{width:100%;font:inherit;padding:11px 12px;border:1.5px solid var(--borde);border-radius:10px;background:#fff;color:inherit}
+textarea{min-height:90px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--verde2);border-color:var(--verde2)}
+.grid-row{border-top:1px solid var(--borde);padding:10px 0}
+.grid-row b{display:block;margin-bottom:6px;font-weight:600}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{flex:1 1 auto;min-width:46%;padding:9px 6px;border:1.5px solid var(--borde);background:#fff;border-radius:8px;font:inherit;font-size:14px;color:inherit}
+.seg button.sel{background:var(--verde2);border-color:var(--verde2);color:#fff}
+.info{background:var(--claro);border-left:4px solid var(--verde2);border-radius:8px;padding:12px;margin:16px 0 4px;font-size:15px;white-space:pre-line}
+.info div{margin-top:6px}
+.escala{display:grid;grid-template-columns:repeat(auto-fit,minmax(38px,1fr));gap:5px}
+.escala button{padding:11px 0;border:1.5px solid var(--borde);background:#fff;border-radius:8px;font:inherit;font-weight:700;color:inherit}
+.escala button.sel{background:var(--verde2);border-color:var(--verde2);color:#fff}
+.escala-et{display:flex;justify-content:space-between;font-size:13px;color:var(--gris);margin-top:4px}
+.err{color:var(--rojo);font-size:14px;margin-top:4px}
+.btn{display:block;width:100%;padding:15px;font:inherit;font-weight:700;border:0;border-radius:12px;background:var(--verde2);color:#fff;margin:8px 0;cursor:pointer}
+.btn.sec{background:#fff;color:var(--verde);border:1.5px solid var(--verde2)}
+.btn.oro{background:var(--oro)}
+.btn:disabled{opacity:.5}
+.barra{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--borde);padding:10px 16px calc(10px + env(safe-area-inset-bottom));display:flex;gap:10px;z-index:5}
+.barra .btn{margin:0}
+.prog{height:6px;background:#ffffff40;border-radius:9px;margin-top:8px;overflow:hidden}
+.prog div{height:100%;background:#fff}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.stats div{background:var(--claro);border-radius:10px;padding:10px 4px}
+.stats b{display:block;font-size:24px;color:var(--verde)}
+.stats span{font-size:12px;color:var(--gris)}
+.lista{font-size:14px}
+.lista div{display:flex;justify-content:space-between;border-bottom:1px solid var(--borde);padding:8px 0}
+.tag{font-size:12px;padding:2px 8px;border-radius:99px;background:var(--claro);color:var(--verde)}
+.tag.p{background:#fbecc8;color:#7a5a00}
+.codigo{font-size:22px;font-weight:800;letter-spacing:1px;color:var(--verde)}
+.metabar{height:12px;background:var(--claro);border-radius:9px;overflow:hidden;margin:6px 0}
+.metabar div{height:100%;background:var(--verde2)}
+small{color:var(--gris)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Encuesta PBS 2026 · CC José Ignacio Távara Pasapera</h1>
+  <div class="sub" id="hsub">Esferas de arcilla y estructuras nodriza</div>
+  <span class="estado" id="red">…</span>
+  <div class="prog" id="hprog" hidden><div id="hprogv" style="width:0"></div></div>
+</header>
+<main id="app"></main>
+<div class="barra" id="barra" hidden></div>
+
+<script>
+const CATALOGO = [{"id": "S_A", "title": "Módulo A. Identificación y consentimiento", "desc": "Lo llena el encuestador. NO se anota el nombre del encuestado: se identifica solo con el código.", "items": [{"id": "A1", "t": "Código de encuesta", "type": "text", "req": true, "pattern": "^(DNM|CAS|K41)-E\\d{2}-\\d{3}$", "help": "Formato CASERÍO-ENCUESTADOR-NÚMERO, ej. DNM-E01-007 (DNM = Dios nos mire, CAS = Casaraná, K41 = km 41). Use el siguiente número libre de su hoja de códigos."}, {"id": "A2", "t": "Caserío", "type": "mc", "opts": ["Dios nos mire", "Casaraná", "km 41"], "req": true}, {"id": "A3a", "t": "Fecha de la encuesta", "type": "date", "req": true}, {"id": "A3b", "t": "Código de encuestador", "type": "list", "opts": ["E01", "E02", "E03", "E04", "E05", "E06"], "req": true}, {"id": "INFO_CONS", "t": "Texto de consentimiento (leer en voz alta)", "type": "info", "help": "Leer: «Buenos días. Soy ___ y hago una encuesta para un estudio académico sobre el cuidado del bosque seco en su comunidad. Este estudio no es una evaluación de ningún proyecto y sus respuestas no afectan ningún apoyo que usted reciba. La encuesta es anónima: no anotaremos su nombre. Dura unos 30 minutos y puede dejar de responder cuando quiera. No hay respuestas buenas ni malas. ¿Acepta participar?»"}, {"id": "A4", "t": "Consentimiento", "type": "mc", "opts": ["Acepta", "No acepta"], "req": true, "help": "Si no acepta, la encuesta termina y se registra solo como rechazo.", "branch": {"Acepta": "S_B", "No acepta": "SUBMIT"}}]}, {"id": "S_B", "title": "Módulo B. Datos generales", "desc": "", "items": [{"id": "B1", "t": "¿Cuántos años cumplidos tiene usted?", "type": "number", "min": 15, "max": 110, "int": true, "req": true}, {"id": "B2", "t": "Sexo (anotar sin preguntar)", "type": "mc", "opts": ["Hombre", "Mujer"], "req": true}, {"id": "B3", "t": "¿Hasta qué año o grado estudió?", "type": "mc", "req": true, "opts": ["Sin estudios", "Primaria incompleta", "Primaria completa", "Secundaria incompleta", "Secundaria completa", "Superior técnica", "Superior universitaria"]}, {"id": "B4", "t": "¿Cuántas personas viven en su casa, contando a usted?", "type": "number", "min": 1, "max": 30, "int": true, "req": true}, {"id": "B5", "t": "De ellas, ¿cuántas trabajan en la parcela o en el bosque?", "type": "number", "min": 0, "max": 30, "int": true, "req": true}, {"id": "B6", "t": "¿Cuánta tierra trabaja su familia? (en hectáreas)", "type": "number", "min": 0, "max": 1000, "req": false, "help": "Convertir a hectáreas. Si no puede convertir en el momento, deje vacío y anote en B6b."}, {"id": "B6b", "t": "Superficie en la unidad que usó el entrevistado (ej. «2 tareas»)", "type": "text"}, {"id": "B7", "t": "¿Cómo tiene usted esa tierra?", "type": "mc", "other": true, "req": true, "opts": ["Posesión comunal con constancia o certificado", "Posesión comunal sin documento", "Heredada de la familia", "Prestada o alquilada"]}, {"id": "B8", "t": "Sumando todo lo que gana su familia en un mes normal, ¿en qué rango está?", "type": "mc", "req": true, "help": "NO leer las opciones: esperar la respuesta y marcar el rango. Rangos sujetos a revisión tras la prueba piloto.", "opts": ["Menos de S/ 500", "S/ 500 a S/ 749", "S/ 750 a S/ 999", "S/ 1 000 a S/ 1 499", "S/ 1 500 a S/ 1 999", "S/ 2 000 a S/ 2 500", "Más de S/ 2 500", "No sabe / No responde"]}, {"id": "B9a", "t": "Animales que cría: caprinos (número)", "type": "number", "min": 0, "max": 5000, "int": true}, {"id": "B9b", "t": "Animales que cría: ovinos (número)", "type": "number", "min": 0, "max": 5000, "int": true}, {"id": "B9c", "t": "Animales que cría: vacunos (número)", "type": "number", "min": 0, "max": 5000, "int": true}, {"id": "B9d", "t": "Animales que cría: porcinos (número)", "type": "number", "min": 0, "max": 5000, "int": true}, {"id": "B9e", "t": "Animales que cría: aves de corral (número)", "type": "number", "min": 0, "max": 5000, "int": true}]}, {"id": "S_C", "title": "Módulo C. Medios de vida y bosque", "desc": "", "items": [{"id": "C1", "t": "¿De qué actividades vive su familia? (puede marcar varias)", "type": "cb", "opts": ["Agricultura de secano", "Ganadería", "Carbón", "Leña", "Algarrobo: vaina o algarrobina", "Apicultura", "Recolección de frutos", "Jornaleo", "Comercio"], "other": true, "req": true}, {"id": "C2", "t": "¿Cuál es la actividad que más dinero le deja a su familia?", "type": "list", "opts": ["Agricultura de secano", "Ganadería", "Carbón", "Leña", "Algarrobo: vaina o algarrobina", "Apicultura", "Recolección de frutos", "Jornaleo", "Comercio", "Otra"], "req": true}, {"id": "C3", "t": "En los últimos 12 meses, ¿qué productos sacó su familia del bosque y para qué los usó?", "type": "grid", "rows": ["Leña", "Carbón", "Vaina de algarrobo", "Algarrobina", "Miel", "Forraje o ramoneo para el ganado", "Madera o postes", "Frutos silvestres", "Plantas medicinales", "Otro producto"], "cols": ["No lo usó", "Para la casa", "Para vender", "Para ambos"], "req": true}, {"id": "INFO_C4", "t": "C4. En los últimos 12 meses, ¿cuánto dinero obtuvo su familia de cada fuente?", "type": "info", "help": "Montos aproximados en soles. Si no tuvo ingresos de una fuente, escribir 0."}, {"id": "C4a", "t": "Ingreso últimos 12 meses (S/): agricultura", "type": "number", "min": 0, "max": 500000}, {"id": "C4b", "t": "Ingreso últimos 12 meses (S/): ganadería", "type": "number", "min": 0, "max": 500000}, {"id": "C4c", "t": "Ingreso últimos 12 meses (S/): productos del bosque", "type": "number", "min": 0, "max": 500000}, {"id": "C4d", "t": "Ingreso últimos 12 meses (S/): jornales", "type": "number", "min": 0, "max": 500000}, {"id": "C4e", "t": "Ingreso últimos 12 meses (S/): comercio", "type": "number", "min": 0, "max": 500000}, {"id": "C4f", "t": "Ingreso últimos 12 meses (S/): programas sociales o remesas", "type": "number", "min": 0, "max": 500000}, {"id": "C4g", "t": "Ingreso últimos 12 meses (S/): otra fuente", "type": "number", "min": 0, "max": 500000}, {"id": "C5", "t": "Contando el dinero y lo que saca para su consumo, ¿qué parte de lo que obtiene su familia viene del bosque?", "type": "scale", "min": 0, "max": 10, "lo": "Nada", "hi": "Todo", "req": true, "help": "Usar 10 semillas o piedritas: «De estas 10, ¿cuántas vienen del bosque?»"}]}, {"id": "S_D1", "title": "Módulo D. Participación en ECA y otras intervenciones", "desc": "", "items": [{"id": "D1", "t": "¿Usted ha participado en la Escuela de Campo del Proyecto Bosque Seco?", "type": "mc", "opts": ["Sí", "No"], "req": true, "branch": {"Sí": "S_D2", "No": "S_D5"}}]}, {"id": "S_D2", "title": "Módulo D. Participación en la ECA", "desc": "", "items": [{"id": "D2", "t": "¿En qué año empezó a participar?", "type": "number", "min": 2000, "max": 2026, "int": true}, {"id": "D3", "t": "Más o menos, ¿a cuántas sesiones de la Escuela de Campo asistió?", "type": "mc", "req": true, "opts": ["1 a 3", "4 a 6", "7 a 10", "Más de 10", "No recuerda"]}, {"id": "D4", "t": "En la Escuela de Campo, ¿usted fue…?", "type": "mc", "opts": ["Participante", "Promotor o líder"], "other": true, "req": true}]}, {"id": "S_D5", "title": "Módulo D. Campañas e intervenciones previas", "desc": "", "items": [{"id": "D5", "t": "¿En cuántas campañas organizadas de preparación o lanzamiento de esferas de arcilla ha participado? (0 = ninguna)", "type": "number", "min": 0, "max": 100, "int": true, "req": true}, {"id": "D6", "t": "Antes del Proyecto Bosque Seco, ¿participó en otros proyectos de reforestación o cuidado del bosque?", "type": "mc", "opts": ["Sí", "No"], "req": true, "branch": {"Sí": "S_D7", "No": "S_E1"}}]}, {"id": "S_D7", "title": "Módulo D. Proyectos anteriores", "desc": "", "items": [{"id": "D7", "t": "¿Con qué institución? (puede marcar varias)", "type": "cb", "other": true, "req": true, "opts": ["AIDER", "Gobierno Regional o Norbosque", "PNUD", "Municipalidad"]}, {"id": "D7b", "t": "¿En qué año(s)? (indicar por institución, ej. «AIDER 2012»)", "type": "text"}, {"id": "D8", "t": "¿Qué actividad hizo en ese proyecto?", "type": "mc", "other": true, "req": true, "opts": ["Reforestación o plantón", "Protección de regeneración natural", "Trochas cortafuego"]}]}, {"id": "S_E1", "title": "Módulo E. Adopción de la dispersión con esferas de arcilla", "desc": "", "items": [{"id": "E1", "t": "¿Ha escuchado hablar de las esferas o bolitas de arcilla con semillas para el bosque?", "type": "mc", "opts": ["Sí", "No"], "req": true, "branch": {"Sí": "S_E2", "No": "S_FIL"}}]}, {"id": "S_E2", "title": "Módulo E. Conocimiento y decisión (esferas)", "desc": "", "items": [{"id": "E2", "t": "¿Me podría contar cómo se preparan y dónde se colocan? (NO leer opciones; marcar lo que mencione)", "type": "cb", "other": true, "opts": ["Arcilla", "Semillas nativas", "Estiércol", "Agua", "Se lanzan o colocan en el bosque o en zonas sin árboles", "Se hacen antes de las lluvias", "La esfera protege la semilla (sol / viento / animales como hormigas)", "No menciona nada"]}, {"id": "E3", "t": "¿Qué tan útil cree que es hacer esferas de arcilla para el bosque de su caserío?", "type": "mc", "opts": ["1 Nada útil", "2 Poco útil", "3 Regular", "4 Útil", "5 Muy útil"], "req": true}, {"id": "E4", "t": "¿Usted ha decidido hacer esferas por su propia cuenta, aunque no haya una campaña organizada?", "type": "mc", "opts": ["Sí", "Todavía no lo decide", "No"], "req": true, "branch": {"Sí": "S_E5", "Todavía no lo decide": "S_E5", "No": "S_E8"}}]}, {"id": "S_E5", "title": "Módulo E. Implementación y confirmación (esferas)", "desc": "", "items": [{"id": "E5", "t": "En los últimos 12 meses, ¿preparó o colocó esferas por su propia cuenta, fuera de las campañas organizadas?", "type": "mc", "opts": ["Sí", "No"], "req": true}, {"id": "E5b", "t": "Si E5 = Sí: ¿más o menos cuántas esferas?", "type": "number", "min": 0, "max": 100000, "int": true}, {"id": "E6", "t": "¿Piensa seguir haciendo esferas el próximo año?", "type": "mc", "opts": ["Sí", "No sabe", "No"], "req": true}, {"id": "E7", "t": "¿Antes hacía esferas por su cuenta y dejó de hacerlo?", "type": "mc", "opts": ["Sí", "No"], "req": true, "branch": {"Sí": "S_E8", "No": "S_E9"}}]}, {"id": "S_E8", "title": "Módulo E. Rechazo o discontinuación (esferas)", "desc": "", "items": [{"id": "E8", "t": "¿Por qué? (NO leer opciones)", "type": "cb", "other": true, "req": true, "opts": ["Falta de tiempo", "No hay semillas o materiales", "No ve resultados", "El ganado se come lo que crece", "No llueve lo suficiente", "No le corresponde a él o ella"]}]}, {"id": "S_E9", "title": "Módulo E. Fuente de aprendizaje (esferas)", "desc": "", "items": [{"id": "E9", "t": "¿Dónde o de quién aprendió a hacer esferas? (puede marcar varias)", "type": "cb", "other": true, "opts": ["Escuela de Campo", "Campaña organizada", "Vecino o familiar", "Otra institución", "Ya lo sabía de antes", "No aprendió a hacerlas"]}, {"id": "E9b", "t": "¿Cuál fue la fuente principal?", "type": "list", "opts": ["Escuela de Campo", "Campaña organizada", "Vecino o familiar", "Otra institución", "Ya lo sabía de antes", "Otro", "No aplica"]}]}, {"id": "S_FIL", "title": "Control de ruta", "desc": "El módulo F (estructuras nodriza) se aplica SOLO en Dios nos mire.", "items": [{"id": "FIL", "t": "¿La encuesta se está aplicando en Dios nos mire?", "type": "mc", "opts": ["Sí", "No"], "req": true, "branch": {"Sí": "S_F1", "No": "S_G"}}]}, {"id": "S_F1", "title": "Módulo F. Adopción de la RNA con estructuras nodriza", "desc": "Solo en Dios nos mire.", "items": [{"id": "F1", "t": "¿Ha escuchado hablar de proteger las plantitas que nacen solas en el bosque con estructuras de ramas?", "type": "mc", "opts": ["Sí", "No"], "req": true, "branch": {"Sí": "S_F2", "No": "S_G"}}]}, {"id": "S_F2", "title": "Módulo F. Conocimiento y decisión (nodrizas)", "desc": "", "items": [{"id": "F2", "t": "¿Me podría contar cómo se hace? (NO leer opciones; marcar lo que mencione)", "type": "cb", "other": true, "opts": ["Se busca una plantita nacida sola", "Se cortan ramas de overal", "Se arma una estructura alrededor", "Protege del ganado", "Protege de otros animales (iguanas)", "No menciona nada"]}, {"id": "F3", "t": "¿Qué tan útil cree que es proteger las plantitas de esta manera?", "type": "mc", "opts": ["1 Nada útil", "2 Poco útil", "3 Regular", "4 Útil", "5 Muy útil"], "req": true}, {"id": "F4", "t": "¿Usted ha decidido proteger plantitas por su propia cuenta, aunque no haya una actividad organizada?", "type": "mc", "opts": ["Sí", "Todavía no lo decide", "No"], "req": true, "branch": {"Sí": "S_F5", "Todavía no lo decide": "S_F5", "No": "S_F8"}}]}, {"id": "S_F5", "title": "Módulo F. Implementación y confirmación (nodrizas)", "desc": "", "items": [{"id": "F5", "t": "En los últimos 12 meses, ¿protegió plantitas por su propia cuenta?", "type": "mc", "opts": ["Sí", "No"], "req": true}, {"id": "F5b", "t": "Si F5 = Sí: ¿más o menos cuántas plantitas?", "type": "number", "min": 0, "max": 100000, "int": true}, {"id": "F6", "t": "¿Piensa seguir protegiendo plantitas el próximo año?", "type": "mc", "opts": ["Sí", "No sabe", "No"], "req": true}, {"id": "F7", "t": "¿Antes protegía plantitas y dejó de hacerlo?", "type": "mc", "opts": ["Sí", "No"], "req": true, "branch": {"Sí": "S_F8", "No": "S_F9"}}]}, {"id": "S_F8", "title": "Módulo F. Rechazo o discontinuación (nodrizas)", "desc": "", "items": [{"id": "F8", "t": "¿Por qué? (NO leer opciones)", "type": "cb", "other": true, "req": true, "opts": ["Falta de tiempo", "No hay ramas o materiales", "El ganado igual las daña", "No ve resultados"]}]}, {"id": "S_F9", "title": "Módulo F. Fuente de aprendizaje y verificación (nodrizas)", "desc": "", "items": [{"id": "F9", "t": "¿Dónde o de quién aprendió a proteger plantitas así? (puede marcar varias)", "type": "cb", "other": true, "opts": ["Escuela de Campo", "Proyecto de AIDER", "Vecino o familiar", "Ya lo sabía de antes", "No aprendió"]}, {"id": "F9b", "t": "¿Cuál fue la fuente principal?", "type": "list", "opts": ["Escuela de Campo", "Proyecto de AIDER", "Vecino o familiar", "Ya lo sabía de antes", "Otro", "No aplica"]}, {"id": "F10", "t": "Si F5 = Sí: ¿Podría mostrarnos alguna de las plantitas que protegió?", "type": "mc", "req": true, "opts": ["Sí, se observó", "No fue posible", "No aplica (F5 no es Sí)"]}]}, {"id": "S_G", "title": "Módulo G. Percepción del clima y El Niño", "desc": "", "items": [{"id": "G1", "t": "Comparando con hace unos 10 años, ¿cómo son ahora las lluvias en su caserío?", "type": "mc", "opts": ["1 Mucho menos", "2 Algo menos", "3 Igual", "4 Algo más", "5 Mucho más", "No sabe"], "req": true}, {"id": "G2", "t": "Comparando con hace unos 10 años, ¿cómo es ahora el calor?", "type": "mc", "opts": ["1 Mucho menos", "2 Algo menos", "3 Igual", "4 Algo más", "5 Mucho más", "No sabe"], "req": true}, {"id": "G3", "t": "Comparando con hace unos 10 años, ¿cómo son ahora las sequías?", "type": "mc", "opts": ["1 Mucho menos frecuentes", "2 Algo menos", "3 Igual", "4 Algo más", "5 Mucho más frecuentes", "No sabe"], "req": true}, {"id": "G4", "t": "¿Usted cree que el clima de su zona está cambiando?", "type": "mc", "opts": ["Sí", "No", "No sabe"], "req": true}, {"id": "G5", "t": "¿Su familia fue afectada por el último Fenómeno El Niño fuerte?", "type": "mc", "opts": ["Sí", "No", "No recuerda"], "req": true, "branch": {"Sí": "S_G6", "No": "S_G7", "No recuerda": "S_G7"}}]}, {"id": "S_G6", "title": "Módulo G. Efectos de El Niño", "desc": "", "items": [{"id": "G5b", "t": "¿A qué evento se refiere? (año que menciona el entrevistado)", "type": "text"}, {"id": "G6", "t": "¿Cómo les afectó? (puede marcar varias)", "type": "cb", "other": true, "req": true, "opts": ["Pérdida de cultivos", "Pérdida de animales", "Daño a la vivienda", "Caminos cortados", "Enfermedades"]}]}, {"id": "S_G7", "title": "Módulo G. Preocupación y vínculo bosque–clima", "desc": "", "items": [{"id": "G7", "t": "¿Qué tan preocupado está usted por que venga otro Niño fuerte en los próximos años?", "type": "mc", "opts": ["1 Nada", "2 Poco", "3 Regular", "4 Bastante", "5 Mucho"], "req": true}, {"id": "G8", "t": "«Cuidar y recuperar el bosque ayuda a mi familia a enfrentar las sequías y El Niño». ¿Qué tan de acuerdo está?", "type": "mc", "opts": ["1 Totalmente en desacuerdo", "2 En desacuerdo", "3 Ni de acuerdo ni en desacuerdo", "4 De acuerdo", "5 Totalmente de acuerdo"], "req": true}]}, {"id": "S_H", "title": "Módulo H. Confianza entre actores", "desc": "Leer: «Ahora le voy a preguntar cuánto confía usted en algunas personas e instituciones. Recuerde que la encuesta es anónima.»", "items": [{"id": "H1", "t": "¿Cuánto confía en que la directiva comunal cumple lo que ofrece?", "type": "mc", "opts": ["1 Nada", "2 Poco", "3 Regular", "4 Bastante", "5 Mucho"], "req": true}, {"id": "H2", "t": "¿Cuánto confía en que el Proyecto Bosque Seco cumple lo que ofrece?", "type": "mc", "opts": ["1 Nada", "2 Poco", "3 Regular", "4 Bastante", "5 Mucho"], "req": true}, {"id": "H3", "t": "¿Cuánto confía en que otras instituciones (AIDER, Gobierno Regional) cumplen lo que ofrecen?", "type": "mc", "opts": ["1 Nada", "2 Poco", "3 Regular", "4 Bastante", "5 Mucho"], "req": true}, {"id": "H4", "t": "¿Cuánto confía en que la municipalidad cumple lo que ofrece?", "type": "mc", "opts": ["1 Nada", "2 Poco", "3 Regular", "4 Bastante", "5 Mucho"], "req": true}, {"id": "H5", "t": "¿Cuánto confía usted en los vecinos de su caserío?", "type": "mc", "opts": ["1 Nada", "2 Poco", "3 Regular", "4 Bastante", "5 Mucho"], "req": true}, {"id": "H6", "t": "«Los proyectos anteriores en mi caserío cumplieron lo que prometieron». ¿Qué tan de acuerdo está?", "type": "mc", "opts": ["1 Totalmente en desacuerdo", "2 En desacuerdo", "3 Ni de acuerdo ni en desacuerdo", "4 De acuerdo", "5 Totalmente de acuerdo"], "req": true}]}, {"id": "S_Z", "title": "Cierre", "desc": "", "items": [{"id": "Z1", "t": "«Muchas gracias por su tiempo. ¿Hay algo más que quiera contarnos sobre el cuidado del bosque en su caserío?»", "type": "paragraph"}, {"id": "Z2", "t": "¿Aceptaría que lo busquemos más adelante para una conversación?", "type": "mc", "opts": ["Sí", "No"], "req": true, "help": "Si acepta: anote nombre y contacto SOLO en la hoja de contactos separada (papel o archivo restringido) junto al código A1. NUNCA en este formulario."}, {"id": "Z3", "t": "Observaciones del encuestador", "type": "paragraph"}]}];
+const PREFIJOS = {'Dios nos mire':'DNM','Casaraná':'CAS','km 41':'K41'};
+const META = 70;
+const URL_DEFECTO = '';      // opcional: pegar aquí la URL /exec del Apps Script
+const TOKEN_DEFECTO = 'PBS-2026-cambiar-esta-clave';
+
+/* ---------- almacenamiento local ---------- */
+const LS = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); return true; }catch(e){ alert('No se pudo guardar en el teléfono: ' + e.message); return false; } }
+};
+const cfg = () => Object.assign({url: URL_DEFECTO, token: TOKEN_DEFECTO, enc: '', dispositivo: ''}, LS.get('pbs_cfg', {}));
+const cola = () => LS.get('pbs_cola', []);
+const secPorId = Object.fromEntries(CATALOGO.map((s, i) => [s.id, i]));
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const hoyISO = () => { const d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0, 10); };
+
+if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js');
+
+/* ---------- estado de conexión ---------- */
+function pintarRed(){
+  const n = cola().filter(x => x.estado !== 'enviada').length;
+  const r = $('#red');
+  r.textContent = (navigator.onLine ? 'En línea' : 'Sin conexión') + (n ? ' · ' + n + ' por enviar' : ' · todo enviado');
+  r.className = 'estado' + (navigator.onLine ? '' : ' off');
+}
+addEventListener('online', () => { pintarRed(); sincronizar(); });
+addEventListener('offline', pintarRed);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) sincronizar(); });
+setInterval(() => { if (navigator.onLine) sincronizar(); }, 60000);
+
+/* ---------- sincronización ---------- */
+let sincronizando = false;
+async function sincronizar(manual){
+  const c = cfg();
+  if (sincronizando || !navigator.onLine) { if (manual) alert('Sin conexión. Las encuestas quedan guardadas y se enviarán solas.'); return; }
+  if (!c.url) { if (manual) alert('Falta la URL del servidor en Ajustes.'); return; }
+  sincronizando = true;
+  let ok = 0, fallo = '';
+  const q = cola();
+  for (const it of q.filter(x => x.estado !== 'enviada')) {
+    try {
+      const r = await fetch(c.url, {method: 'POST', headers: {'Content-Type': 'text/plain;charset=utf-8'},
+        body: JSON.stringify({token: c.token, uid: it.uid, respuestas: it.respuestas, meta: it.meta})});
+      const j = await r.json();
+      if (j.ok) { it.estado = 'enviada'; it.enviadaEn = new Date().toISOString(); it.obs = (j.observaciones || []).join('; '); ok++; }
+      else { it.intentos = (it.intentos || 0) + 1; fallo = j.error; }
+    } catch (e) { it.intentos = (it.intentos || 0) + 1; fallo = e.message; break; }
+    LS.set('pbs_cola', q);
+  }
+  sincronizando = false;
+  try { const r = await fetch(c.url); const j = await r.json(); if (j.ok) LS.set('pbs_avance', j); } catch (e) {}
+  pintarRed();
+  if (vista === 'inicio') inicio();
+  if (manual) alert(ok ? ok + ' encuesta(s) enviada(s).' : (fallo ? 'No se pudo enviar: ' + fallo : 'No había encuestas pendientes.'));
+}
+
+/* ---------- pantallas ---------- */
+let vista = 'inicio', E = null;   // E = encuesta en curso
+function barra(html){ const b = $('#barra'); b.hidden = !html; b.innerHTML = html || ''; }
+function cabecera(prog){ $('#hprog').hidden = prog == null; if (prog != null) $('#hprogv').style.width = prog + '%'; }
+
+function inicio(){
+  vista = 'inicio'; cabecera(null); barra('');
+  const c = cfg(), q = cola(), pend = q.filter(x => x.estado !== 'enviada');
+  const borr = LS.get('pbs_borrador', null);
+  const av = LS.get('pbs_avance', null);
+  const hoy = q.filter(x => (x.meta.fin || '').slice(0, 10) === hoyISO() && x.respuestas.A4 === 'Acepta').length;
+  $('#app').innerHTML = `
+  ${!c.enc || !c.url ? `<div class="card" style="border-color:var(--oro)"><b>Configure la app antes de empezar</b>
+     <p class="desc">Indique su código de encuestador y la dirección del servidor.</p>
+     <button class="btn oro" onclick="ajustes()">Ir a Ajustes</button></div>` : ''}
+  <div class="card">
+    <div class="stats">
+      <div><b>${hoy}</b><span>Hoy (este equipo)</span></div>
+      <div><b>${pend.length}</b><span>Por enviar</span></div>
+      <div><b>${q.length - pend.length}</b><span>Enviadas</span></div>
+    </div>
+    ${av ? `<p style="margin:14px 0 0"><b>Avance del equipo: ${av.total} de ${av.meta}</b> <small>(${new Date(av.actualizado).toLocaleString()})</small></p>
+      <div class="metabar"><div style="width:${Math.min(100, Math.round(100 * av.total / av.meta))}%"></div></div>
+      <small>${Object.entries(av.porCaserio).map(([k, v]) => esc(k) + ': ' + v.total).join(' · ')}</small>` : ''}
+  </div>
+  ${borr ? `<button class="btn oro" onclick="continuar()">Continuar encuesta ${esc(borr.r.A1 || '')}</button>` : ''}
+  <button class="btn" onclick="nueva()" ${!c.enc ? 'disabled' : ''}>＋ Nueva encuesta</button>
+  <button class="btn sec" onclick="sincronizar(true)">⇅ Enviar ahora</button>
+  <button class="btn sec" onclick="lista()">Encuestas de este equipo</button>
+  <button class="btn sec" onclick="ajustes()">Ajustes</button>
+  <p class="desc" style="text-align:center;margin-top:16px">Las encuestas se guardan en el teléfono y se envían solas cuando hay internet (con la app abierta).<br>Encuestador: <b>${esc(c.enc || '—')}</b></p>`;
+  pintarRed();
+}
+
+function ajustes(){
+  vista = 'ajustes'; cabecera(null); barra('');
+  const c = cfg();
+  $('#app').innerHTML = `<div class="card"><h2>Ajustes</h2>
+   <div class="q">Código de encuestador</div>
+   <select id="cEnc">${['', 'E01', 'E02', 'E03', 'E04', 'E05', 'E06'].map(e => `<option ${e === c.enc ? 'selected' : ''}>${e}</option>`).join('')}</select>
+   <div class="q">Nombre de este equipo (opcional)</div><input type="text" id="cDisp" value="${esc(c.dispositivo)}" placeholder="ej. Celular Ana">
+   <div class="q">URL del servidor (Apps Script /exec)</div><input type="url" id="cUrl" value="${esc(c.url)}" placeholder="https://script.google.com/macros/s/…/exec">
+   <div class="q">Clave (TOKEN)</div><input type="text" id="cTok" value="${esc(c.token)}">
+   <button class="btn" onclick="guardarAjustes()">Guardar</button>
+   <button class="btn sec" onclick="respaldo()">Descargar respaldo (JSON)</button>
+   <button class="btn sec" onclick="inicio()">Volver</button></div>`;
+}
+function guardarAjustes(){
+  LS.set('pbs_cfg', {enc: $('#cEnc').value, dispositivo: $('#cDisp').value.trim(), url: $('#cUrl').value.trim(), token: $('#cTok').value.trim()});
+  inicio(); sincronizar();
+}
+function respaldo(){
+  const blob = new Blob([JSON.stringify(cola(), null, 1)], {type: 'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'respaldo_PBS_' + (cfg().enc || 'X') + '_' + hoyISO() + '.json'; a.click();
+}
+function lista(){
+  vista = 'lista'; cabecera(null); barra('');
+  const q = cola().slice().reverse();
+  $('#app').innerHTML = `<div class="card"><h2>Encuestas de este equipo (${q.length})</h2><div class="lista">
+   ${q.map(x => `<div><span><b>${esc(x.respuestas.A1 || '—')}</b> · ${esc(x.respuestas.A2 || '')}<br><small>${new Date(x.meta.fin).toLocaleString()}${x.respuestas.A4 === 'No acepta' ? ' · no aceptó' : ''}</small></span>
+     <span class="tag ${x.estado === 'enviada' ? '' : 'p'}">${x.estado === 'enviada' ? 'Enviada' : 'Por enviar'}</span></div>`).join('') || '<p class="desc">Aún no hay encuestas.</p>'}
+   </div></div><button class="btn sec" onclick="inicio()">Volver</button>`;
+}
+
+/* ---------- encuesta ---------- */
+function nueva(){
+  E = {uid: 'u' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7), r: {A3a: hoyISO(), A3b: cfg().enc},
+       pila: [], sec: 0, inicio: new Date().toISOString(), otroOn: {}, otroTxt: {}};
+  pintar();
+}
+function continuar(){ E = LS.get('pbs_borrador', null); if (E) pintar(); }
+function guardarBorrador(){ LS.set('pbs_borrador', E); }
+
+function siguienteCodigo(cas){
+  const c = cfg(), pre = PREFIJOS[cas] + '-' + c.enc + '-';
+  const usados = cola().map(x => x.respuestas.A1).filter(x => x && x.startsWith(pre)).map(x => +x.slice(-3));
+  const cont = LS.get('pbs_contadores', {});
+  const n = Math.max(cont[pre] || 0, ...usados, 0) + 1;
+  return pre + String(n).padStart(3, '0');
+}
+
+function pintar(){
+  vista = 'encuesta';
+  const s = CATALOGO[E.sec];
+  cabecera(Math.round(100 * E.sec / (CATALOGO.length - 1)));
+  let h = `<div class="card"><h2>${esc(s.title)}</h2>${s.desc ? `<p class="desc">${esc(s.desc)}</p>` : ''}`;
+  for (const q of s.items) h += pregunta(q);
+  h += '</div>';
+  $('#app').innerHTML = h;
+  barra(`<button class="btn sec" onclick="atras()" style="flex:1">${E.pila.length ? '← Atrás' : 'Salir'}</button>
+         <button class="btn" onclick="adelante()" style="flex:2">Siguiente →</button>`);
+  scrollTo(0, 0);
+  guardarBorrador();
+}
+
+function pregunta(q){
+  const v = E.r[q.id];
+  let h = `<div class="q" id="q_${q.id}"><span class="id">${q.id}.</span>${esc(q.t)}${q.req ? ' <span class="req">*</span>' : ''}</div>`;
+  if (q.help) h += `<div class="help">${esc(q.help)}</div>`;
+  const nm = 'f_' + q.id;
+  if (q.type === 'info') {
+    return `<div class="info"><b>${esc(q.t)}</b>${q.help ? `<div>${esc(q.help)}</div>` : ''}</div>`;
+  }
+  if (q.type === 'scale') {
+    let b = '';
+    for (let n = q.min; n <= q.max; n++) b += `<button type="button" class="${String(v) === String(n) ? 'sel' : ''}" onclick="E.r['${q.id}']='${n}';repintar()">${n}</button>`;
+    return h + `<div class="escala">${b}</div><div class="escala-et"><span>${esc(q.lo)}</span><span>${esc(q.hi)}</span></div><div class="err" id="e_${q.id}"></div>`;
+  }
+  if (q.id === 'A1') {
+    h += `<input type="text" name="${nm}" value="${esc(v || '')}" placeholder="Se genera al elegir el caserío" style="font-weight:700;letter-spacing:1px" oninput="E.r.A1=this.value.toUpperCase().trim();E.codigoManual=true">`;
+  } else if (q.type === 'text' || q.type === 'number') {
+    const num = q.type === 'number';
+    h += `<input type="${num ? 'number' : 'text'}" ${num ? `inputmode="decimal" step="any" min="${q.min}" max="${q.max}"` : ''} value="${esc(v ?? '')}"
+          oninput="E.r['${q.id}']=this.value.trim()">`;
+  } else if (q.type === 'paragraph') {
+    h += `<textarea oninput="E.r['${q.id}']=this.value">${esc(v || '')}</textarea>`;
+  } else if (q.type === 'date') {
+    h += `<input type="date" value="${esc(v || '')}" oninput="E.r['${q.id}']=this.value">`;
+  } else if (q.type === 'list') {
+    h += `<select onchange="E.r['${q.id}']=this.value"><option value=""></option>${q.opts.map(o => `<option ${o === v ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>`;
+  } else if (q.type === 'mc' || q.type === 'cb') {
+    const multi = q.type === 'cb', arr = multi ? (v || []) : [v];
+    const otro = E.otroOn[q.id] ? (E.otroTxt[q.id] || '') : null;
+    h += q.opts.map((o, i) => `<label class="opt ${arr.includes(o) ? 'sel' : ''}"><input type="${multi ? 'checkbox' : 'radio'}" name="${nm}"
+           ${arr.includes(o) ? 'checked' : ''} onchange="marcar('${q.id}',${i},this.checked)">${esc(o)}</label>`).join('');
+    if (q.other) h += `<label class="opt ${otro != null ? 'sel' : ''}"><input type="${multi ? 'checkbox' : 'radio'}" name="${nm}" ${otro != null ? 'checked' : ''}
+           onchange="marcar('${q.id}',-1,this.checked)">Otro:</label>
+           <input type="text" id="otro_${q.id}" value="${esc(otro || '')}" placeholder="Especifique" oninput="otroTxt('${q.id}',this.value)" ${otro == null ? 'hidden' : ''}>`;
+  } else if (q.type === 'grid') {
+    const g = v || {};
+    h += q.rows.map((r, ri) => `<div class="grid-row"><b>${esc(r)}</b><div class="seg">${q.cols.map((c, ci) =>
+         `<button type="button" class="${g[r] === c ? 'sel' : ''}" onclick="celda('${q.id}',${ri},${ci})">${esc(c)}</button>`).join('')}</div></div>`).join('');
+  }
+  return h + `<div class="err" id="e_${q.id}"></div>`;
+}
+
+const Q = Object.fromEntries(CATALOGO.flatMap(s => s.items.map(q => [q.id, q])));
+function marcar(id, i, on){
+  const q = Q[id];
+  if (q.type === 'mc') {
+    E.otroOn[id] = i < 0;
+    E.r[id] = i < 0 ? (E.otroTxt[id] || '') : q.opts[i];
+    if (id === 'A2' && !E.codigoManual) E.r.A1 = siguienteCodigo(E.r.A2);
+  } else {
+    let a = (E.r[id] || []).filter(x => q.opts.includes(x));
+    if (i >= 0) a = on ? [...a, q.opts[i]] : a.filter(x => x !== q.opts[i]);
+    else E.otroOn[id] = on;
+    E.r[id] = armarCb(q, a);
+  }
+  const y = scrollY; pintar(); scrollTo(0, y);
+  if (i < 0 && on) { const t = $('#otro_' + id); t.hidden = false; t.focus(); }
+}
+function armarCb(q, a){
+  const r = q.opts.filter(o => a.includes(o));
+  if (E.otroOn[q.id] && (E.otroTxt[q.id] || '').trim()) r.push(E.otroTxt[q.id].trim().replace(/,\s*/g, ' / '));
+  return r;
+}
+function otroTxt(id, val){
+  const q = Q[id]; E.otroTxt[id] = val;
+  E.r[id] = q.type === 'mc' ? val.trim() : armarCb(q, (E.r[id] || []).filter(x => q.opts.includes(x)));
+}
+function repintar(){ const y = scrollY; pintar(); scrollTo(0, y); }
+function celda(id, ri, ci){
+  const q = Q[id]; E.r[id] = Object.assign({}, E.r[id] || {}); E.r[id][q.rows[ri]] = q.cols[ci];
+  const y = scrollY; pintar(); scrollTo(0, y);
+}
+
+function validar(s){
+  let ok = true, primero = null;
+  for (const q of s.items) {
+    if (q.type === 'info') continue;
+    const v = E.r[q.id]; let msg = '';
+    const vacio = v == null || v === '' || (Array.isArray(v) && !v.filter(x => x !== '').length);
+    if (q.req && vacio) msg = 'Respuesta obligatoria';
+    if (!vacio && q.type === 'number') {
+      const n = Number(v);
+      if (isNaN(n) || n < q.min || n > q.max) msg = `Debe ser un número entre ${q.min} y ${q.max}`;
+      else if (q.int && !Number.isInteger(n)) msg = 'Debe ser un número entero';
+    }
+    if (!vacio && q.pattern && !new RegExp(q.pattern).test(v)) msg = 'Formato: DNM-E01-007';
+    if (q.id === 'A1' && !vacio && cola().some(x => x.respuestas.A1 === v)) msg = 'Este código ya se usó en este equipo';
+    if (q.type === 'grid' && q.req && q.rows.some(r => !(v || {})[r])) msg = 'Complete todas las filas';
+    if (q.id === 'B5' && Number(v) > Number(E.r.B4)) msg = 'No puede ser mayor que B4';
+    const e = $('#e_' + q.id); if (e) e.textContent = msg;
+    if (msg) { ok = false; primero = primero || q.id; }
+  }
+  if (primero) $('#q_' + primero).scrollIntoView({behavior: 'smooth', block: 'center'});
+  return ok;
+}
+
+function destino(s){
+  for (const q of s.items) if (q.branch && E.r[q.id] in q.branch) return q.branch[E.r[q.id]];
+  return E.sec + 1 < CATALOGO.length ? CATALOGO[E.sec + 1].id : 'SUBMIT';
+}
+
+function adelante(){
+  const s = CATALOGO[E.sec];
+  if (!validar(s)) return;
+  let d = destino(s);
+  // La sección «Control de ruta» se resuelve sola con el caserío (A2)
+  if (d === 'S_FIL') { E.r.FIL = E.r.A2 === 'Dios nos mire' ? 'Sí' : 'No'; d = Q.FIL.branch[E.r.FIL]; }
+  if (d === 'SUBMIT') return finalizar();
+  E.pila.push(E.sec); E.sec = secPorId[d]; pintar();
+}
+function atras(){
+  if (!E.pila.length) { if (confirm('¿Salir? La encuesta queda guardada como borrador.')) inicio(); return; }
+  E.sec = E.pila.pop(); pintar();
+}
+
+function limpiarNoVisitadas(){
+  // Quita respuestas de secciones que quedaron fuera del camino final (por cambios de salto)
+  const visit = new Set([...E.pila, E.sec].map(i => CATALOGO[i].id));
+  const r = {};
+  CATALOGO.forEach(s => { if (visit.has(s.id) || s.id === 'S_FIL') s.items.forEach(q => { if (E.r[q.id] !== undefined) r[q.id] = E.r[q.id]; }); });
+  return r;
+}
+
+function finalizar(){
+  const r = limpiarNoVisitadas();
+  const it = {uid: E.uid, estado: 'pendiente', respuestas: r,
+    meta: {inicio: E.inicio, fin: new Date().toISOString(), dispositivo: cfg().dispositivo || navigator.userAgent.slice(0, 60)}};
+  const q = cola(); q.push(it);
+  if (!LS.set('pbs_cola', q)) return;
+  const pre = (r.A1 || '').slice(0, -3), cont = LS.get('pbs_contadores', {});
+  cont[pre] = Math.max(cont[pre] || 0, +(r.A1 || '').slice(-3) || 0); LS.set('pbs_contadores', cont);
+  localStorage.removeItem('pbs_borrador'); E = null;
+  vista = 'fin'; cabecera(100);
+  barra(`<button class="btn" onclick="nueva()" style="flex:1">＋ Siguiente encuesta</button><button class="btn sec" onclick="inicio()" style="flex:1">Inicio</button>`);
+  $('#app').innerHTML = `<div class="card" style="text-align:center"><h2>Encuesta guardada en el teléfono</h2>
+    <p>Código</p><div class="codigo">${esc(r.A1 || '—')}</div>
+    <p class="desc" style="margin-top:12px">${r.A4 === 'No acepta' ? 'Registrada como «No acepta».' : '¡Gracias!'}
+    Se enviará automáticamente cuando haya conexión.</p>
+    ${r.Z2 === 'Sí' ? '<p style="color:var(--oro)"><b>Aceptó entrevista:</b> anote nombre y contacto en la hoja de contactos separada, con este código.</p>' : ''}</div>`;
+  pintarRed(); sincronizar();
+}
+
+inicio(); sincronizar();
+</script>
+</body>
+</html>

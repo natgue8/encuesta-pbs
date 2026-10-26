@@ -1,0 +1,34 @@
+APP DE ENCUESTA SIN CONEXIÓN · PBS 2026
+=========================================
+
+Qué hace
+- Funciona en el celular sin internet: las encuestas se guardan en el teléfono.
+- Cuando vuelve la señal (con la app abierta), las envía solas al mismo Formulario
+  de Google, sin duplicados. También hay un botón «Enviar ahora».
+- Genera el código anónimo de cada encuesta (ej. DNM-E01-007) al elegir el caserío.
+- Aplica los mismos saltos del cuestionario y valida rangos (edad, C5 de 0 a 10, etc.).
+- Muestra el avance del equipo hacia la meta de 70.
+- «Ajustes > Descargar respaldo» guarda un archivo JSON con todas las encuestas del equipo.
+
+Publicarla (una sola vez, gratis) — necesita una dirección https
+1. Cree una cuenta en github.com > New repository (público), p. ej. «encuesta-pbs».
+2. «Add file > Upload files»: suba los 6 archivos de esta carpeta (index.html, sw.js,
+   manifest.json, icon-192.png, icon-512.png, LEEME.txt).
+3. Settings > Pages > Branch: main > Save. En 1–2 minutos tendrá una dirección como
+   https://SU-USUARIO.github.io/encuesta-pbs/
+   (Alternativas equivalentes: Netlify o Cloudflare Pages, arrastrando la carpeta.)
+4. Pegue esa dirección en CONFIG.URL_APP_OFFLINE del Apps Script (aparece como botón en el correo).
+
+En cada celular (con internet, antes de salir a campo)
+1. Abrir la dirección en Chrome (Android) o Safari (iPhone).
+2. Menú ⋮ > «Agregar a pantalla principal» / «Instalar app».
+3. Abrir la app > Ajustes: elegir código de encuestador, pegar la URL /exec del
+   Apps Script y la clave TOKEN. Guardar.
+4. Prueba: activar modo avión, hacer una encuesta de prueba, quitar modo avión y
+   comprobar que el contador «Por enviar» vuelve a 0. Borrar luego esa fila de prueba
+   en la hoja de Google.
+
+Buenas prácticas en campo
+- No borrar los datos del navegador ni desinstalar la app mientras haya encuestas «Por enviar».
+- Abrir la app al llegar a una zona con señal para que sincronice.
+- Al final del día descargar un respaldo (Ajustes) si hubo muchas encuestas sin enviar.
