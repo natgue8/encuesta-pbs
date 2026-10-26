@@ -42,6 +42,9 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--verde2);border-c
 .escala button{padding:11px 0;border:1.5px solid var(--borde);background:#fff;border-radius:8px;font:inherit;font-weight:700;color:inherit}
 .escala button.sel{background:var(--verde2);border-color:var(--verde2);color:#fff}
 .escala-et{display:flex;justify-content:space-between;font-size:13px;color:var(--gris);margin-top:4px}
+.codigo-auto{font-size:24px;font-weight:800;letter-spacing:1px;color:var(--verde);background:var(--claro);border:1.5px dashed var(--verde2);border-radius:10px;padding:12px;text-align:center}
+.codigo-auto.vacio{font-size:16px;font-weight:600;color:var(--gris);background:#fff;border-color:var(--borde)}
+.enlace{background:none;border:0;color:var(--verde2);text-decoration:underline;font:inherit;font-size:14px;padding:8px 0;cursor:pointer}
 .err{color:var(--rojo);font-size:14px;margin-top:4px}
 .btn{display:block;width:100%;padding:15px;font:inherit;font-weight:700;border:0;border-radius:12px;background:var(--verde2);color:#fff;margin:8px 0;cursor:pointer}
 .btn.sec{background:#fff;color:var(--verde);border:1.5px solid var(--verde2)}
@@ -234,7 +237,8 @@ function pintar(){
 function pregunta(q){
   const v = E.r[q.id];
   let h = `<div class="q" id="q_${q.id}"><span class="id">${q.id}.</span>${esc(q.t)}${q.req ? ' <span class="req">*</span>' : ''}</div>`;
-  if (q.help) h += `<div class="help">${esc(q.help)}</div>`;
+  if (q.id === 'A1') h += `<div class="help">Se genera solo al elegir el caserío (A2). No anotar el nombre del encuestado.</div>`;
+  else if (q.help) h += `<div class="help">${esc(q.help)}</div>`;
   const nm = 'f_' + q.id;
   if (q.type === 'info') {
     return `<div class="info"><b>${esc(q.t)}</b>${q.help ? `<div>${esc(q.help)}</div>` : ''}</div>`;
@@ -245,7 +249,13 @@ function pregunta(q){
     return h + `<div class="escala">${b}</div><div class="escala-et"><span>${esc(q.lo)}</span><span>${esc(q.hi)}</span></div><div class="err" id="e_${q.id}"></div>`;
   }
   if (q.id === 'A1') {
-    h += `<input type="text" name="${nm}" value="${esc(v || '')}" placeholder="Se genera al elegir el caserío" style="font-weight:700;letter-spacing:1px" oninput="E.r.A1=this.value.toUpperCase().trim();E.codigoManual=true">`;
+    h += `<div class="codigo-auto ${v ? '' : 'vacio'}">${v ? esc(v) : 'Elija el caserío (A2) ↓'}</div>`;
+    if (E.editarCodigo) {
+      h += `<input type="text" value="${esc(v || '')}" placeholder="Ej. DNM-E01-007" style="font-weight:700;letter-spacing:1px;margin-top:8px"
+             oninput="E.r.A1=this.value.toUpperCase().trim();E.codigoManual=!!E.r.A1;document.querySelector('.codigo-auto').textContent=E.r.A1||'Elija el caserío (A2) ↓'">`;
+    } else if (v) {
+      h += `<button type="button" class="enlace" onclick="E.editarCodigo=true;repintar()">Corregir código manualmente</button>`;
+    }
   } else if (q.type === 'text' || q.type === 'number') {
     const num = q.type === 'number';
     h += `<input type="${num ? 'number' : 'text'}" ${num ? `inputmode="decimal" step="any" min="${q.min}" max="${q.max}"` : ''} value="${esc(v ?? '')}"
@@ -278,7 +288,11 @@ function marcar(id, i, on){
   if (q.type === 'mc') {
     E.otroOn[id] = i < 0;
     E.r[id] = i < 0 ? (E.otroTxt[id] || '') : q.opts[i];
-    if (id === 'A2' && !E.codigoManual) E.r.A1 = siguienteCodigo(E.r.A2);
+    if (id === 'A2') {
+      const pre = PREFIJOS[E.r.A2] + '-';
+      // Se genera siempre, salvo que ya haya un código corregido a mano que corresponda a este caserío
+      if (!E.codigoManual || !(E.r.A1 || '').startsWith(pre)) { E.r.A1 = siguienteCodigo(E.r.A2); E.codigoManual = false; E.editarCodigo = false; }
+    }
   } else {
     let a = (E.r[id] || []).filter(x => q.opts.includes(x));
     if (i >= 0) a = on ? [...a, q.opts[i]] : a.filter(x => x !== q.opts[i]);

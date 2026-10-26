@@ -1,5 +1,5 @@
 // Service worker: guarda la app en el teléfono para que abra sin internet.
-const CACHE = 'pbs-encuesta-v1';
+const CACHE = 'pbs-encuesta-v2';
 const ARCHIVOS = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ARCHIVOS)).then(() => self.skipWaiting()));
